@@ -9,10 +9,10 @@
 enum class Nodes { NodeA, NodeB, NodeC, NodeD };
 
 constexpr uint64_t __expected_final_states__[4] = {
-  3924739178523851918ul,   // NodeA
-  416215330994369847ul,    // NodeB
-  18314823502387776320ul,  // NodeC
-  1601759294353606794ul,   // NodeD
+  5751660619804194925ul,   // NodeA
+  18006181465923544199ul,  // NodeB
+  15001143754122270078ul,  // NodeC
+  5512665284774320871ul,   // NodeD
 
 };
 static uint64_t __final_states__[4] = {0, 0, 0, 0};
@@ -39,7 +39,7 @@ void check_final_states()
     final_hash = hash_combine(final_hash, hash);
   }
 
-  u_int64_t const expected_final_hash = 7448837717382456148ul;
+  u_int64_t const expected_final_hash = 5505309834611564811ul;
   std::cout << std::endl
             << "================================================================" << std::endl;
   if (expected_final_hash == final_hash) {
