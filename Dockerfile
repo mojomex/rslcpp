@@ -1,4 +1,4 @@
-FROM ros:humble
+FROM ros:jazzy
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -11,7 +11,7 @@ WORKDIR /rslcpp
 COPY . .
 
 RUN rm -rf build install log && \
-    source /opt/ros/humble/setup.bash && \
+    source /opt/ros/jazzy/setup.bash && \
     colcon build --cmake-args -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release && \
     source install/setup.bash && \
     ros2 run rslcpp_test determinism --ros-args -p use_sim_time:=true && \
