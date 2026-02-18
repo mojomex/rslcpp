@@ -1,20 +1,18 @@
-ARG BASE_IMAGE=x2gen2:v4.3.1
-FROM ${BASE_IMAGE}
+FROM ros:humble
 
-USER autoware
-WORKDIR /home/autoware
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Temp workaround for wrong Pilot Auto ccache dir
-RUN sed -i '/export CCACHE_DIR="\/var\/tmp\/ccache"/d' ~/.bashrc
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-colcon-common-extensions \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=autoware:autoware . rslcpp/
+WORKDIR /rslcpp
+COPY . .
 
-RUN cd rslcpp && \
-    rm -rf build install log && \
-    source ~/autoware.proj/install/setup.bash && \
+RUN rm -rf build install log && \
+    source /opt/ros/humble/setup.bash && \
     colcon build --cmake-args -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Release && \
     source install/setup.bash && \
     ros2 run rslcpp_test determinism --ros-args -p use_sim_time:=true && \
-    rm ./callback_execution_order.txt && \
-    cd .. && \
-    echo "source ~/rslcpp/install/setup.bash" >> ~/.bashrc
+    rm -f callback_execution_order.txt
