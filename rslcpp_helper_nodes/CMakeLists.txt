@@ -19,6 +19,8 @@ set(NODE_DEPENDENCIES
   rslcpp
   rslcpp_dynamic_job
   diagnostic_msgs
+  std_msgs
+  std_srvs
 )
 
 find_package(ament_cmake)
@@ -31,18 +33,21 @@ endforeach()
 
 set(COMPONENT_PATHS
   components/monitor.cpp
+  components/orchestrator.cpp
   components/player.cpp
   components/recorder.cpp
 )
 
 set(COMPONENT_NAMES
   ${PROJECT_NAME}::SimulationMonitor
+  ${PROJECT_NAME}::PlaybackOrchestrator
   ${PROJECT_NAME}::BagPlayer
   ${PROJECT_NAME}::BagRecorder
 )
 
 set(EXECUTABLE_NAMES
   simulation_monitor_component
+  playback_orchestrator_component
   bag_player_component
   bag_recorder_component
 )
