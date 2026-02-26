@@ -34,12 +34,29 @@ std::vector<rclcpp::Node::SharedPtr> DynamicJob::create_and_get_nodes()
   }
 
   if (arbitrary_callback_post_) arbitrary_callback_post_();
+
+  executor_idle_steppers_.clear();
+  for (auto & node : return_val) {
+    auto stepper = std::dynamic_pointer_cast<rslcpp::ExecutorIdleStepper>(node);
+    if (stepper) {
+      executor_idle_steppers_.push_back(stepper);
+    }
+  }
+
   // Return the concatenated vector
   return return_val;
 }
 rclcpp::Time DynamicJob::get_initial_time() { return internal::get_initial_time(); }
 bool DynamicJob::get_finished() { return internal::get_finished(); }
 exit_code_t DynamicJob::get_exit_code() { return internal::get_exit_code(); }
+bool DynamicJob::on_executor_idle(rclcpp::Time & sim_time)
+{
+  bool injected_work = false;
+  for (auto & stepper : executor_idle_steppers_) {
+    injected_work = stepper->step_on_executor_idle(sim_time) || injected_work;
+  }
+  return injected_work;
+}
 void DynamicJob::set_pre_node_creation_callback(std::function<void()> && callback)
 {
   arbitrary_callback_pre_ = std::move(callback);

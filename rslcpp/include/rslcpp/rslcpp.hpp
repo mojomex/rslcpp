@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 
+#include "rslcpp/executor_idle_stepper.hpp"
 #include "rslcpp/utilities.hpp"
 namespace rslcpp
 {
@@ -31,6 +32,13 @@ public:
   virtual bool get_finished() = 0;
   /// @brief Return the exit code of the simulation. This will be called after stopping the job.
   virtual exit_code_t get_exit_code() = 0;
+  /// @brief Hook called after the executor has no more ready callbacks.
+  /// Return true if new work was injected and the loop should spin again immediately.
+  virtual bool on_executor_idle(rclcpp::Time & sim_time)
+  {
+    (void)sim_time;
+    return false;
+  }
 };
 /// @brief Run a job. This will block until the job is finished and will then return its exit code
 exit_code_t run_job(int argc, char ** argv, Job::SharedPtr job);

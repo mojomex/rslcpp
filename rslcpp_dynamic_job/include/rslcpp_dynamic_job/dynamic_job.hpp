@@ -20,6 +20,7 @@ public:
   rclcpp::Time get_initial_time() override;
   bool get_finished() override;
   exit_code_t get_exit_code() override;
+  bool on_executor_idle(rclcpp::Time & sim_time) override;
 
 public:
   DynamicJob(
@@ -43,6 +44,7 @@ private:
   rslcpp::dynamic_composition::ComponentLoader component_loader_{};
   std::vector<rslcpp::dynamic_composition::ComponentDescription> component_descriptions_;
   rclcpp::NodeOptions node_options_;
+  std::vector<rslcpp::ExecutorIdleStepper::SharedPtr> executor_idle_steppers_;
 
 private:
   std::function<void()> arbitrary_callback_pre_;

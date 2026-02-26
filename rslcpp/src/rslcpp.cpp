@@ -64,6 +64,10 @@ exit_code_t run_job(int argc, char ** argv, Job::SharedPtr job)
                            // setting 0 ns to imply infinite timeout does not work with the current
                            // implementation of the events executor.
 
+    if (job->on_executor_idle(sim_time)) {
+      continue;
+    }
+
 /// Get the time until the next timer.
 #ifdef RSLCPP__CUSTOM__RCLCPP
     std::chrono::nanoseconds time_until_next_timer = executor.get_time_until_next_timer();
